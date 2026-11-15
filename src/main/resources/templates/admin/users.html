@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G12 ユーザー管理 -->
+<head th:replace="~{fragments/header :: head('ユーザー管理')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('users')}"></header>
+<main>
+    <div class="stack">
+
+        <div class="panel">
+            <h2>ユーザー管理</h2>
+            <p class="lead">行を選ぶと詳細が開きます。</p>
+            <div class="msg err" th:if="${error}" th:text="${error}"></div>
+
+            <!-- ① 検索（Enterキーで検索） -->
+            <form th:action="@{/admin/users}" method="get">
+                <input class="search" name="q" th:value="${q}" maxlength="50" placeholder="ユーザー名・メールアドレスで検索">
+            </form>
+
+            <!-- ② ユーザー一覧 -->
+            <div class="scroll" style="margin-top:10px">
+                <table class="tbl click">
+                    <thead>
+                    <tr><th>ユーザー名</th><th>メールアドレス</th><th>権限</th><th>状態</th></tr>
+                    </thead>
+                    <tbody>
+                    <!-- 行をクリックすると data-href のURLへ移動する（下のスクリプト） -->
+                    <tr th:each="u : ${users}"
+                        th:classappend="${selected != null and selected.userId == u.userId} ? 'sel'"
+                        th:data-href="@{/admin/users(q=${q}, id=${u.userId})}">
+                        <td th:text="${u.userName}">kenta</td>
+                        <td th:text="${u.email}">kenta@example.com</td>
+                        <td th:text="${u.role == 'ADMIN'} ? '管理者' : '一般'">一般</td>
+                        <!-- ③ 状態 -->
+                        <td>
+                            <span class="tag on" th:if="${u.enabled}">有効</span>
+                            <span class="tag off" th:unless="${u.enabled}">停止中</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(users)}"><td colspan="4">該当するユーザーがいません</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ④ ユーザー詳細（行を選んだ時だけ） -->
+            <th:block th:if="${selected != null}">
+                <div class="detail">
+                    ▼ <span th:text="${selected.userName}">kenta</span> の詳細
+                    所持チップ：<span class="num" th:text="${#numbers.formatInteger(selected.chips, 1, 'COMMA')}">3,120</span>
+                    プレイ数：<span class="num" th:text="${selectedPlays}">88</span>
+                    登録日：<span th:text="${#temporals.format(selected.createdAt, 'yyyy/MM/dd')}">2026/10/25</span>
+                </div>
+
+                <!-- ⑤ 利用停止／解除（一般ユーザーのみ。押すと確認のダイアログが出る） -->
+                <form th:if="${selected.role == 'USER'}" class="confirm-form"
+                      th:action="@{/admin/users/{id}/toggle(id=${selected.userId})}" method="post"
+                      th:data-message="${selected.userName} + (${selected.enabled} ? ' を利用停止にしますか？' : ' の利用停止を解除しますか？')">
+                    <input type="hidden" name="q" th:value="${q}">
+                    <button class="btn white" type="submit"
+                            th:text="${selected.enabled} ? 'アカウントを利用停止' : '利用停止を解除'">アカウントを利用停止</button>
+                </form>
+            </th:block>
+        </div>
+
+        <!-- 「ホームへ」ボタンは置かない（ヘッダーのメニューで戻れるため） -->
+
+    </div>
+</main>
+
+<script>
+    // 行クリックで詳細を開く
+    document.querySelectorAll('tr[data-href]').forEach(row => {
+        row.addEventListener('click', () => {
+            location.href = row.dataset.href;
+        });
+    });
+
+    // 利用停止／解除の前に確認ダイアログを出す。「キャンセル」なら送信をやめる
+    document.querySelectorAll('.confirm-form').forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!confirm(form.dataset.message)) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+</body>
+</html>

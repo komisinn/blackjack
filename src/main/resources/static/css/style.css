@@ -1,0 +1,239 @@
+/* ブラックジャックゲーム 共通スタイル
+   画面設計書02（画面レイアウト）に合わせたデザイン：緑のフェルト背景＋ゴールド、ヘッダー右にピル型タブ */
+:root{
+  color-scheme: dark;
+  --bg1:#13875a; --bg2:#0a5a3a; --bg3:#063d27;
+  --panel:rgba(5,52,33,.78); --panel-line:rgba(214,190,110,.45);
+  --gold:#f0c45a; --gold2:#c9982e; --ink:#ffffff; --muted:#cfe3d6;
+  --field:#063a26; --field-line:rgba(160,210,180,.35);
+  --win:#2e9e55; --lose:#c8382f; --push:#6b6f73; --wait:#2f8a5c; --turn:#2f6fd0;
+  --card:#ffffff; --card-red:#d23a3a; --card-blk:#151515;
+  --sans:"Noto Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--ink);font-size:14px;line-height:1.6;
+  background:radial-gradient(ellipse at 40% 20%,var(--bg1) 0%,var(--bg2) 55%,var(--bg3) 100%) fixed var(--bg3);min-height:100vh}
+button,input,select{font:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+a{color:var(--gold)}
+
+/* ヘッダー（⑦ヘッダーメニュー） */
+.hdr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;background:linear-gradient(180deg,#073b26,#06331f);border-bottom:2px solid var(--gold2)}
+.hdr .brand{font-weight:900;color:var(--gold);font-size:17px;cursor:pointer;white-space:nowrap}
+.hdr nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tab{border:1px solid rgba(255,255,255,.55);background:transparent;color:#fff;border-radius:999px;padding:3px 13px;font-size:13px;font-weight:500;cursor:pointer}
+.tab.on{background:linear-gradient(180deg,#f6d77d,#d4a23a);color:#2b1d00;border-color:#f6d77d;font-weight:700}
+.who{color:var(--muted);font-size:12px;font-weight:700;margin:0 4px}
+.badge-admin{background:#2f6fd0;color:#fff;font-size:10px;border-radius:3px;padding:1px 5px;margin-left:4px}
+
+main{max-width:760px;margin:0 auto;padding-block:22px 48px;padding-inline:16px}
+.panel{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:18px 20px}
+.panel h2{color:var(--gold);font-size:16px;font-weight:900;margin:0 0 4px}
+.panel .lead{color:var(--muted);font-size:12px;margin:0 0 12px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ボタン */
+.btn{border:none;border-radius:999px;padding:9px 22px;font-weight:700;cursor:pointer;font-size:14px;box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.btn.gold{background:linear-gradient(180deg,#f6d77d,#c9982e);color:#2b1d00}
+.btn.white{background:linear-gradient(180deg,#ffffff,#dcdcdc);color:#222}
+.btn.block{width:100%;border-radius:12px;padding:11px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* コイン */
+.coin{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe9a0,#d4a23a);color:#5a3e00;font-size:9px;font-weight:900;vertical-align:-2px;margin-right:3px}
+.num{font-variant-numeric:tabular-nums}
+
+/* 認証カード（G1〜G3） */
+.auth{max-width:410px;margin:18px auto;padding:22px 24px}
+.auth .ttl{text-align:center;color:var(--gold);font-weight:900;font-size:17px}
+.auth .sub{text-align:center;color:var(--muted);font-size:11px;margin-bottom:12px}
+.authtabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:14px}
+.authtabs button{background:none;border:none;color:#e8efe9;padding:8px;cursor:pointer;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.authtabs button.on{color:var(--gold);border-color:var(--gold);font-weight:700}
+.field{margin-bottom:12px}
+.field label{display:block;color:var(--gold);font-size:12px;font-weight:700;margin-bottom:4px}
+.field input{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--field-line);background:var(--field);color:#fff}
+.field input::placeholder{color:#8fb39f}
+.field input[readonly]{color:#a9c4b4}
+.msg{font-size:12px;font-weight:700;margin:2px 0 10px;min-height:1em}
+.msg.err{color:#ffd0c8}.msg.ok{color:#d9f5e1}
+.center{text-align:center}
+.small{font-size:12px}
+
+/* G4 ホーム */
+.hero{text-align:center;padding:18px}
+.hero .hi{font-size:11px;color:var(--muted)}
+.hero .name{font-size:20px;font-weight:900;margin-bottom:8px}
+.chipbig{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(240,196,90,.6);border-radius:12px;padding:6px 20px;background:rgba(240,196,90,.12);color:var(--gold);font-size:19px;font-weight:900}
+.streak{color:var(--gold);font-weight:900;font-size:13px;margin:6px 0 10px}
+.resetbox{display:inline-block;border:1px solid var(--panel-line);border-radius:8px;padding:8px 12px;margin-top:12px;font-size:12px;font-weight:700}
+.resetbox .note{display:block;color:var(--muted);font-weight:400;margin-top:4px}
+.btn.mini{padding:4px 12px;font-size:12px;margin-left:8px}
+.stats3{display:flex;gap:36px;flex-wrap:wrap}
+.stats3 .v{color:var(--gold);font-size:22px;font-weight:900;line-height:1.2}
+.stats3 .k{font-size:11px;color:var(--muted)}
+.menu{list-style:none;margin:6px 0 0;padding:0}
+.menu li{border-top:1px solid rgba(255,255,255,.15)}
+.menu a{display:flex;justify-content:space-between;align-items:center;padding:8px 0;color:#fff;text-decoration:none;font-weight:700;font-size:13px;cursor:pointer}
+.menu a small{color:var(--muted);font-weight:400;margin-left:10px;flex:1}
+
+/* テーブル（G5〜G7） */
+.dealerlbl,.namepill{display:inline-block;background:#fff;color:#222;border-radius:999px;padding:2px 16px;font-weight:700;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.namepill.you{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.dealer{text-align:center;margin-bottom:14px}
+.cardbox{display:inline-flex;gap:5px;padding:6px;background:rgba(3,40,24,.7);border:1px solid rgba(255,255,255,.2);border-radius:6px;margin-top:6px;min-height:58px}
+.pc{width:36px;height:50px;border-radius:4px;background:var(--card);color:var(--card-blk);position:relative;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.pc.red{color:var(--card-red)}
+.pc .r{position:absolute;top:2px;left:4px;font-size:10px;font-weight:900;line-height:1}
+.pc .s{position:absolute;inset:6px 0 0;display:grid;place-items:center;font-size:22px}
+.pc.back{background:linear-gradient(160deg,#21456e,#122a47);color:#c9d6ea;display:grid;place-items:center;font-weight:900;border:1px solid #3a5f8c}
+@keyframes deal{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.pc{animation:none}}
+.tot{font-size:12px;margin-top:4px}
+.seats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;text-align:center}
+@media (max-width:560px){.seats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}}
+.seatchips{font-size:12px;margin-top:6px;display:flex;gap:4px;justify-content:center;align-items:center;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:900;border-radius:3px;padding:1px 6px;color:#fff;letter-spacing:.02em}
+.tag.WIN,.tag.BJ{background:var(--win)}.tag.LOSE,.tag.BUST,.tag.SUR{background:var(--lose)}.tag.PUSH,.tag.STAND{background:var(--push)}
+.tag.wait{background:var(--wait)}.tag.turn{background:var(--turn)}
+.tag.on{background:var(--win)}.tag.off{background:var(--lose)}
+.betchip{width:26px;height:26px;border-radius:50%;margin:0 auto 4px;display:grid;place-items:center;font-size:8px;font-weight:900;border:2px dashed #fff}
+.streakbar{display:inline-block;border:1px solid rgba(240,196,90,.6);background:rgba(240,196,90,.15);color:var(--gold);font-weight:900;font-size:12px;border-radius:999px;padding:3px 16px;margin-top:8px}
+.betline{text-align:center;font-size:12px;font-weight:700;margin:16px 0 10px}
+.acts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.act{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.85);color:#fff;font-weight:900;font-size:8px;padding:0;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,.4)}
+.act:disabled{opacity:.35;cursor:not-allowed}
+.act.SURRENDER{background:#8a5a4e}.act.STAND{background:#ef8f2a}.act.HIT{background:#2f7be0}.act.DOUBLE{background:#7f7fcf}
+.footnote{text-align:center;font-size:11px;color:var(--muted);margin-top:10px}
+.tablearea{position:relative}
+.reslog{position:absolute;right:0;top:0;text-align:right;font-size:11px;font-weight:700;line-height:1.5}
+@media (max-width:560px){.reslog{position:static;text-align:center;margin-bottom:8px}}
+
+/* チップ（G5） */
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{width:42px;height:42px;border-radius:50%;border:3px dashed rgba(255,255,255,.9);color:#fff;font-size:10px;font-weight:900;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,.45),inset 0 0 0 2px rgba(0,0,0,.2)}
+.chip:disabled{opacity:.3;cursor:not-allowed}
+.c5{background:#8b9094}.c10{background:#2f6fd0}.c25{background:#2a9b52}.c50{background:#c8382f}.c100{background:#1d1d1d}.c250{background:#7b45b5}.c500{background:#c9982e}
+/* オールインの端数（1〜4）のチップ */
+.c1,.c2,.c3,.c4{background:#b8bcc0;color:#222}
+.stacked{display:flex;min-height:32px;align-items:center}
+.stacked .chip{width:30px;height:30px;font-size:8px;border-width:2px;margin-left:-8px}
+.stacked .chip:first-child{margin-left:0}
+.betamt{font-weight:900;font-size:15px}.betamt b{font-size:19px}
+
+/* G7 */
+.resultttl{color:var(--gold);font-weight:900;font-size:17px}
+
+/* 一覧 */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{color:var(--gold);text-align:left;font-weight:700;padding:6px 8px;border-bottom:1px solid var(--gold2)}
+.tbl td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.12);font-weight:700}
+.tbl tr.sel td{background:rgba(255,255,255,.08)}
+.tbl tbody tr{cursor:default}
+.tbl.click tbody tr{cursor:pointer}
+.scroll{overflow-x:auto}
+.rank li{display:flex;gap:14px;padding:7px 4px;border-top:1px solid rgba(255,255,255,.12);font-weight:700;font-size:13px}
+.rank li .n{color:var(--gold);width:14px}.rank li .u{flex:1}
+.rank li.me{background:rgba(255,255,255,.1);font-weight:900}
+.rank{list-style:none;margin:0;padding:0}
+.rules td{padding:8px 4px;border-top:1px solid rgba(255,255,255,.15);font-size:13px}
+.rules td:first-child{font-weight:900;width:130px;white-space:nowrap}
+.rules{width:100%;border-collapse:collapse}
+.detail{font-size:12px;font-weight:700;padding:8px 4px;color:#f0f0f0}
+.search{width:100%;max-width:290px;padding:8px 11px;border-radius:7px;border:1px solid var(--field-line);background:var(--field);color:#fff}
+.pager{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:10px;font-size:12px;font-weight:700}
+.pager .btn{padding:3px 12px;font-size:12px}
+.chartbox{position:relative;height:120px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px;z-index:10}
+.modal .panel{max-width:340px;text-align:center}
+
+
+/* ===== テンプレート用の追加 ===== */
+a.tab,a.btn{text-decoration:none;display:inline-block}
+a.brand{text-decoration:none}
+form.inline{display:inline}
+.tbl.click tbody tr.sel td{background:rgba(255,255,255,.08)}
+.tbl a.rowlink{color:#fff;text-decoration:none;display:block}
+.search[type=date]{max-width:160px}
+.resultttl.w{color:#8ee6a8}.resultttl.l{color:#ffb0a6}
+
+.authtabs a{color:#e8efe9;padding:8px;text-align:center;text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.authtabs a.on{color:var(--gold);border-color:var(--gold);font-weight:700}
+a.btn.block{display:block;text-align:center}
+button.tab{font-family:inherit}
+
+/* ===== レイアウト図（画面設計書02）と見比べて合わせた調整 ===== */
+body{font-size:13px;background:radial-gradient(ellipse 120% 130% at 35% 0%,#13875a 0%,#0d6f48 50%,#085636 100%) fixed #0a5f3d}
+.hdr{padding:8px 16px;gap:8px}
+.hdr .brand{font-size:16px}
+.hdr nav{gap:4px}
+.tab{font-size:12px;padding:2px 11px}
+.who{font-size:11px;font-weight:500}
+main{max-width:740px;padding-block:18px 40px}
+.panel{padding:14px 16px}
+.panel h2{font-size:15px}
+.stack{gap:10px}
+.seats{width:100%;max-width:520px;margin-inline:auto}
+.dealerlbl,.namepill{font-size:12px;padding:2px 14px}
+.cardbox{background:rgba(22,120,80,.55);border-color:rgba(255,255,255,.3)}
+.stats3{gap:28px}
+.stats3 .v{font-size:19px}
+.hero .name{font-size:18px}
+.chipbig{font-size:17px;border-radius:10px}
+.tbl td{font-weight:500}
+.rank li{font-weight:500}
+.rank li.me{font-weight:900}
+.auth{border:2px solid rgba(214,190,110,.6);max-width:400px}
+.betamt{font-size:14px}.betamt b{font-size:18px}
+.stacked .chip,.betchip{background:#c9982e;color:#3a2a00}
+.btn{padding:8px 20px;font-size:13px}
+.act{width:56px;height:56px}
+.chartbox{height:110px}
+
+/* カードが3枚以上になったら重ねて並べ、隣の席にはみ出さないようにする */
+.seats .cardbox:has(.pc:nth-child(3)) .pc+.pc{margin-left:-14px}
+.seats .cardbox:has(.pc:nth-child(4)) .pc+.pc{margin-left:-24px}
+
+/* ===== ヘッダー（改訂）：ボタンの枠をやめて、文字のタブ＋金色の下線にする ===== */
+.hdr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 20px;padding:0 12px 0 8px;min-height:52px;
+  background:#052b1b;border-bottom:1px solid rgba(214,190,110,.35);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.hdr .brand{display:flex;align-items:center;gap:6px;font-weight:900;color:var(--gold);font-size:16px;letter-spacing:.02em;white-space:nowrap}
+.hdr .brand .suit{font-size:18px;line-height:1}
+.hdr nav{margin:0;display:flex;gap:2px;align-self:stretch;overflow-x:auto;scrollbar-width:none}
+.hdr nav::-webkit-scrollbar{display:none}
+.tab{position:relative;border:0;background:none;border-radius:0;color:rgba(255,255,255,.72);padding:0 12px;font-size:13px;font-weight:500;line-height:52px;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab.on{background:none;color:#fff;font-weight:700}
+/* 今いる画面のタブの下に、金色の線を引く */
+.tab.on::after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--gold)}
+.tab:focus-visible,.logout:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.acct{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.hchips{font-size:13px;font-weight:700;color:var(--gold)}
+.who{color:var(--muted);font-size:12px;font-weight:500;margin:0}
+.logout{border:0;background:none;color:var(--muted);font-family:inherit;font-size:12px;font-weight:500;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.logout:hover{color:#fff}
+/* スマホ：1段目に所持チップ・名前・ログアウト、2段目にタブを並べる */
+@media (max-width:640px){
+  .hdr{grid-template-columns:1fr;padding:0 16px;gap:0}
+  .acct{justify-content:flex-end;min-height:36px}
+  .hdr nav{order:2;border-top:1px solid rgba(255,255,255,.08);margin:0 -16px;padding:0 6px}
+  .tab{line-height:42px;padding:0 10px}
+}
+
+/* 名前を押すとプロフィール編集（G10）へ */
+.who.link{text-decoration:none;color:#fff;font-size:12.5px;font-weight:700;padding:4px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:5px}
+.who.link .gear{font-size:12px;color:var(--muted)}
+.who.link:hover,.who.link.on{background:rgba(255,255,255,.10)}
+.who.link.on .gear{color:var(--gold)}
+
+/* スマホ：G6の操作ボタンを少し大きくして、SURRENDER の文字が収まるようにする */
+@media (max-width:560px){.act{width:64px;height:64px;font-size:8.5px;letter-spacing:-.01em}}
+
+/* グラフが画面幅からはみ出さないようにする */
+.chartbox canvas{max-width:100%}
+
+/* 新しく配られたカードだけ、ふわっと出す（ほかのカードは動かさない） */
+.pc.deal-in{animation:dealIn .3s ease-out}
+@keyframes dealIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pc.deal-in{animation:none}}

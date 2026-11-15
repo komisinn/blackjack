@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G8 戦績 -->
+<head th:replace="~{fragments/header :: head('戦績')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('stats')}"></header>
+<main>
+    <div class="stack">
+
+        <div class="panel">
+            <h2>戦績</h2>
+            <div class="stats3">
+                <!-- ① プレイ数 -->
+                <div><div class="v num" th:text="${stats.totalGames}">24</div><div class="k">プレイ数</div></div>
+                <!-- ② 勝率 -->
+                <div><div class="v num" th:text="${stats.winRate} + '%'">54%</div><div class="k">勝率</div></div>
+                <!-- ③ チップ収支 -->
+                <div><div class="v num" th:text="${stats.netLabel}">+450</div><div class="k">チップ収支</div></div>
+            </div>
+        </div>
+
+        <!-- ④ チップ推移グラフ（Chart.js） -->
+        <div class="panel">
+            <h2>チップ推移</h2>
+            <div class="chartbox" th:unless="${#lists.isEmpty(chipHistory)}"><canvas id="chipChart"></canvas></div>
+            <p class="lead" th:if="${#lists.isEmpty(chipHistory)}" style="margin:0">まだプレイ記録がありません。ゲームをするとここにグラフが出ます。</p>
+        </div>
+
+        <!-- ⑤ チップランキング（自分の行を強調） -->
+        <div class="panel">
+            <h2>チップランキング</h2>
+            <ol class="rank">
+                <li th:each="u, st : ${ranking}" th:classappend="${u.userId == myId} ? 'me'">
+                    <span class="n" th:text="${st.count}">1</span>
+                    <span class="u" th:text="${u.userName}">kenta</span>
+                    <span th:replace="~{fragments/header :: coin(${u.chips})}"></span>
+                </li>
+            </ol>
+        </div>
+
+        <!-- 「ホームへ」ボタンは置かない（ヘッダーのメニューで戻れるため） -->
+
+    </div>
+</main>
+
+<!-- Chart.js はアプリの中に置いたファイルを読む（ネットにつながらない場所でもグラフが出る） -->
+<script th:src="@{/js/chart.umd.js}"></script>
+<!-- th:inline="javascript" を付けると、サーバーの値をJavaScriptの変数に入れられる -->
+<script th:inline="javascript">
+    // 直近30ゲームの「精算後チップ」（古い順）。例：[1000, 1100, 1050, ...]
+    const chipHistory = /*[[${chipHistory}]]*/ [];
+
+    const canvas = document.getElementById('chipChart');
+    if (canvas && chipHistory.length > 0) {
+        new Chart(canvas, {
+            type: 'line', // 折れ線グラフ
+            data: {
+                labels: chipHistory.map((value, index) => index + 1), // 1, 2, 3, ...（何ゲーム目か）
+                datasets: [{
+                    data: chipHistory,
+                    borderColor: '#f0c45a',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    // 設計書どおり、目盛りは出さずに下の線（基準線）だけ表示する
+                    x: { ticks: { display: false }, grid: { display: false }, border: { color: 'rgba(255,255,255,.3)' } },
+                    y: { display: false }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

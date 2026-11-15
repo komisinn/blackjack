@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G11 管理者ホーム -->
+<head th:replace="~{fragments/header :: head('管理者ホーム')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('admin')}"></header>
+<main>
+    <div class="stack">
+
+        <div class="panel center">
+            <div class="small" style="color:var(--muted)">管理者としてログイン中</div>
+            <!-- ① 管理者名 -->
+            <div style="font-size:20px;font-weight:900"><span th:text="${loginUser.userName}">admin</span> さん</div>
+        </div>
+
+        <div class="panel">
+            <h2>管理メニュー</h2>
+            <ul class="menu">
+                <!-- ② ユーザー管理 -->
+                <li><a th:href="@{/admin/users}">ユーザー管理<small>一覧・詳細確認と利用停止</small>›</a></li>
+                <!-- ③ プレイ履歴 -->
+                <li><a th:href="@{/admin/history}">プレイ履歴<small>全ユーザーのプレイ履歴</small>›</a></li>
+            </ul>
+        </div>
+
+        <!-- ④ 概況 -->
+        <div class="panel">
+            <h2>概況</h2>
+            <div class="stats3">
+                <div><div class="v num" th:text="${#numbers.formatInteger(userCount, 1, 'COMMA')}">42</div><div class="k">登録ユーザー</div></div>
+                <div><div class="v num" th:text="${#numbers.formatInteger(gameCount, 1, 'COMMA')}">1,286</div><div class="k">総プレイ数</div></div>
+                <div><div class="v num" th:text="${disabledCount}">1</div><div class="k">停止中</div></div>
+            </div>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>

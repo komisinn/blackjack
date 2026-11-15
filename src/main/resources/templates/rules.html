@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G9 ルール説明 -->
+<head th:replace="~{fragments/header :: head('ルール説明')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('rules')}"></header>
+<main>
+    <div class="stack">
+
+        <div class="panel">
+            <h2>ブラックジャックのルール</h2>
+            <p class="lead">初めての方はここを読んでからプレイしてください。</p>
+            <!-- ① ルール一覧（固定文） -->
+            <table class="rules">
+                <tr><td>目的</td><td>手札の合計を21に近づける。21を超えるとバストで負け。</td></tr>
+                <tr><td>カードの数え方</td><td>2〜10はそのまま。J・Q・Kは10。Aは1または11。</td></tr>
+                <tr><td>サレンダー</td><td>最初の2枚で降りる。賭け金の半分が戻る。</td></tr>
+                <tr><td>スタンド／ヒット</td><td>引かずに勝負する／1枚引く。</td></tr>
+                <tr><td>ダブル</td><td>賭け金を倍にして1枚だけ引く。最初の2枚のみ。</td></tr>
+                <tr><td>ディーラー</td><td>17以上になるまで引き続ける。</td></tr>
+                <tr><td>ブラックジャック</td><td>Aと絵札の2枚。配当1.5倍。</td></tr>
+                <tr><td>連勝ボーナス</td><td>賭け金100以上で勝つと連勝数が増える。3連勝で+1,000、5連勝で+2,000。</td></tr>
+            </table>
+        </div>
+
+        <!-- 「ホームへ」ボタンは置かない（ヘッダーのメニューで戻れるため） -->
+
+    </div>
+</main>
+</body>
+</html>

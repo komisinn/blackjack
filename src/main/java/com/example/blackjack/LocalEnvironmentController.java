@@ -15,7 +15,8 @@ public class LocalEnvironmentController {
         this.jdbc = jdbc;
     }
 
-    @GetMapping({"/", "/api/dev/health"})
+    // "/" はアプリのトップ（HomeController）が使うので、確認用は /api/dev/health だけにする
+    @GetMapping("/api/dev/health")
     public Map<String, String> health() {
         Integer result = jdbc.queryForObject("SELECT 1", Integer.class);
         if (!Integer.valueOf(1).equals(result)) {

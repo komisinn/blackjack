@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G7 結果 -->
+<head th:replace="~{fragments/header :: head('結果')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('play')}"></header>
+<main>
+    <div class="stack">
+
+        <div>
+            <!-- ① ディーラーの手札（すべて表向き＋合計） -->
+            <div class="dealer">
+                <span class="dealerlbl">Dealer</span><br>
+                <div class="cardbox">
+                    <th:block th:each="c : ${view.dealer.cards}">
+                        <th:block th:replace="~{fragments/header :: card(${c})}"></th:block>
+                    </th:block>
+                </div>
+                <div class="tot" th:text="${view.dealer.label}">合計 17</div>
+            </div>
+
+            <!-- ② 各プレイヤーの結果（WIN／LOSE／PUSH／BUST） -->
+            <div class="seats">
+                <div th:each="s : ${view.seats}">
+                    <span class="namepill" th:classappend="${s.you} ? 'you'" th:text="${s.name}">You</span>
+                    <div class="seatchips">
+                        <span th:replace="~{fragments/header :: coin(${s.chips})}"></span>
+                        <span class="tag" th:classappend="${s.tagClass}" th:text="${s.tag}">WIN</span>
+                    </div>
+                    <!-- カードは自分の分だけ表示 -->
+                    <th:block th:if="${s.you}">
+                        <div class="cardbox">
+                            <th:block th:each="c : ${s.cards}">
+                                <th:block th:replace="~{fragments/header :: card(${c})}"></th:block>
+                            </th:block>
+                        </div>
+                        <div class="tot" th:text="${s.total}">19</div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" th:with="total=${state.net + state.bonus}">
+            <!-- ③ 結果メッセージ（プラスなら緑、マイナスなら赤） -->
+            <div class="resultttl" th:classappend="${total gt 0} ? 'w' : (${total lt 0} ? 'l' : '')"
+                 th:text="${view.resultLabel}">勝ち</div>
+
+            <div class="row small" style="margin:6px 0 12px;gap:18px">
+                <!-- ④ 収支・連勝ボーナス -->
+                <span>
+                    収支 <span class="num" th:text="${(total gt 0 ? '+' : '') + #numbers.formatInteger(total, 1, 'COMMA')}">+200</span>
+                    （連勝ボーナス +<span class="num" th:text="${#numbers.formatInteger(state.bonus, 1, 'COMMA')}">0</span>）
+                </span>
+                <!-- ⑤ 所持チップ -->
+                <span>所持チップ <span class="num" th:text="${#numbers.formatInteger(state.chipsAfter, 1, 'COMMA')}">1,550</span></span>
+            </div>
+
+            <div class="row">
+                <!-- ⑥ 次のゲーム（チップが0になったらホームでリセットしてもらう） -->
+                <a class="btn gold" th:href="@{/game/bet}" th:if="${state.chipsAfter gt 0}">次のゲーム</a>
+                <!-- ⑦ ホームへ -->
+                <a class="btn white" th:href="@{/home}">ホームへ</a>
+            </div>
+            <p class="small" th:if="${state.chipsAfter == 0}" style="margin:10px 0 0">
+                チップがなくなりました。ホームで初期額に戻せます。
+            </p>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>

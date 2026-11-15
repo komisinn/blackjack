@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!--
+  全画面で使い回す部品（フラグメント）をまとめたファイル。
+  各画面からは th:replace="~{fragments/header :: 部品名}" で呼び出す。
+-->
+
+<!-- ===== <head> の共通部分。引数 title がタブに表示される ===== -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Ajax（G6）でPOSTする時に必要なCSRFトークン。game.js がここから読む -->
+    <meta name="_csrf" th:content="${_csrf != null} ? ${_csrf.token} : ''">
+    <meta name="_csrf_header" th:content="${_csrf != null} ? ${_csrf.headerName} : ''">
+    <title th:text="${title} + ' | ブラックジャックゲーム'">ブラックジャックゲーム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<!-- ===== ヘッダーメニュー（G4 ⑥⑦）=====
+  左：画面の切り替え（今いる画面のタブに金色の下線）／右：所持チップ・名前・ログアウト
+  アプリ名はヘッダーには出さない（ブラウザのタブとログイン画面に出る）
+  引数 active に今いる画面の名前を渡すと、そのタブに下線が付く -->
+<header th:fragment="header(active)" class="hdr" th:if="${loginUser != null}">
+    <nav>
+        <!-- 一般ユーザー用のタブ -->
+        <th:block th:if="${loginUser.role == 'USER'}">
+            <a class="tab" th:classappend="${active == 'home'} ? 'on'" th:href="@{/home}">ホーム</a>
+            <a class="tab" th:classappend="${active == 'play'} ? 'on'" th:href="@{/game/bet}">プレイ</a>
+            <a class="tab" th:classappend="${active == 'stats'} ? 'on'" th:href="@{/stats}">戦績</a>
+            <a class="tab" th:classappend="${active == 'rules'} ? 'on'" th:href="@{/rules}">ルール</a>
+        </th:block>
+        <!-- 管理者用のタブ -->
+        <th:block th:if="${loginUser.role == 'ADMIN'}">
+            <a class="tab" th:classappend="${active == 'admin'} ? 'on'" th:href="@{/admin}">管理者ホーム</a>
+            <a class="tab" th:classappend="${active == 'users'} ? 'on'" th:href="@{/admin/users}">ユーザー管理</a>
+            <a class="tab" th:classappend="${active == 'history'} ? 'on'" th:href="@{/admin/history}">プレイ履歴</a>
+        </th:block>
+    </nav>
+
+    <div class="acct">
+        <!-- 一般ユーザーは、どの画面でも所持チップが見えるようにする -->
+        <span class="hchips" th:if="${loginUser.role == 'USER'}">
+            <span th:replace="~{fragments/header :: coin(${loginUser.chips})}"></span>
+        </span>
+        <!-- 一般ユーザー：名前を押すとプロフィール編集（G10）へ -->
+        <a class="who link" th:if="${loginUser.role == 'USER'}" th:classappend="${active == 'profile'} ? 'on'"
+           th:href="@{/profile}" title="プロフィール編集">
+            <span th:text="${loginUser.userName}">demo</span><span class="gear" aria-hidden="true">⚙</span>
+        </a>
+        <!-- 管理者：名前だけ（管理者はプロフィール編集を使わない） -->
+        <span class="who" th:if="${loginUser.role == 'ADMIN'}" th:text="${loginUser.userName}">管理者</span>
+        <!-- ログアウトはPOSTで送る（th:action を使うとCSRFトークンが自動で入る） -->
+        <form class="inline" th:action="@{/logout}" method="post">
+            <button class="logout" type="submit">ログアウト</button>
+        </form>
+    </div>
+</header>
+
+<!-- ===== コインのマーク付きの数字（例： c 1,450） ===== -->
+<span th:fragment="coin(v)" class="num"><span class="coin">c</span><span th:text="${#numbers.formatInteger(v, 1, 'COMMA')}">0</span></span>
+
+<!-- ===== トランプ1枚。c は hidden / rank / suit / red を持つ ===== -->
+<th:block th:fragment="card(c)">
+    <div class="pc back" th:if="${c.hidden}">?</div>
+    <div class="pc" th:unless="${c.hidden}" th:classappend="${c.red} ? 'red'">
+        <span class="r" th:text="${c.rank}">A</span><span class="s" th:text="${c.suit}">♠</span>
+    </div>
+</th:block>
+
+</body>
+</html>
