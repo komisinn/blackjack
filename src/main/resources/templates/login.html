@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G3 ログイン -->
+<head th:replace="~{fragments/header :: head('ログイン')}"></head>
+<body>
+<main>
+    <div class="panel auth">
+        <div class="ttl">ブラックジャックゲーム</div>
+        <div class="sub">チップを賭けてAIと同じテーブルで勝負しよう</div>
+
+        <!-- ログイン／新規登録の切り替えタブ -->
+        <div class="authtabs">
+            <a class="on" th:href="@{/login}">ログイン</a>
+            <a th:href="@{/register}">新規登録</a>
+        </div>
+
+        <!-- POST /login は Spring Security が受け取って認証してくれる -->
+        <form th:action="@{/login}" method="post">
+            <!-- ① メールアドレス -->
+            <div class="field">
+                <label for="email">メールアドレス</label>
+                <input id="email" name="email" type="email" maxlength="255" placeholder="you@example.com" required autofocus>
+            </div>
+            <!-- ② パスワード -->
+            <div class="field">
+                <label for="password">パスワード</label>
+                <input id="password" name="password" type="password" maxlength="64" placeholder="パスワード" required>
+            </div>
+            <!-- ③ エラーメッセージ：URLに ?error が付いている時だけ表示（認証失敗・利用停止中） -->
+            <div class="msg err">
+                <span th:if="${param.error}">メールアドレスまたはパスワードが違います</span>
+            </div>
+            <div class="msg ok" th:if="${param.logout}">ログアウトしました</div>
+            <!-- ④ ログイン -->
+            <button class="btn gold block" type="submit">ログイン</button>
+        </form>
+
+        <!-- ⑤ 新規登録はこちら -->
+        <p class="center small" style="margin:10px 0 0"><a th:href="@{/register}">新規登録はこちら</a></p>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G2 登録完了 -->
+<head th:replace="~{fragments/header :: head('登録完了')}"></head>
+<body>
+<main>
+    <div class="panel auth center" style="padding:26px 24px">
+        <div style="font-size:34px;line-height:1">✓</div>
+        <!-- ① 完了メッセージ -->
+        <div style="font-size:17px;font-weight:900;margin:6px 0 10px">登録が完了しました</div>
+        <!-- ② ユーザー名 -->
+        <p class="small" style="margin:0 0 6px"><span th:text="${registeredName}">demo</span> さんのアカウントを作成しました。</p>
+        <!-- ③ 初期チップ -->
+        <p class="small" style="margin:0 0 18px">
+            初期チップ <b style="color:var(--gold)"><span th:replace="~{fragments/header :: coin(${registeredChips})}"></span></b> からゲームを始められます。
+        </p>
+        <!-- ④ ログイン画面へ -->
+        <a class="btn gold block" th:href="@{/login}">ログイン画面へ</a>
+    </div>
+</main>
+</body>
+</html>

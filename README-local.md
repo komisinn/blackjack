@@ -28,8 +28,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\start-local.ps1
 
 `blackjack_dev` ユーザーのパスワードを入力します。Springの起動完了メッセージを確認してください。
 `http://localhost:8080/` を開き、`"status":"UP"` と `"database":"CONNECTED"` が表示されれば、アプリ起動とMySQLへのSQL実行を確認できています。
-同じ確認は `http://localhost:8080/api/dev/health` でもできます。確認ページはlocalプロファイル限定です。ゲーム画面はまだ未実装です。
+同じ確認は `http://localhost:8080/api/dev/health` でもできます。確認ページはlocalプロファイル限定です。
 終了は Ctrl+C。
+
+## アプリを使う
+
+起動したら `http://localhost:8080/` を開くとログイン画面（G3）が出ます。
+
+- 一般ユーザー：「新規登録」から作る（初期チップ 1,000）
+- 管理者：`admin@example.com` / `admin1234`（初回起動時に自動で作成。あとで変更すること）
+
+users・games テーブルは起動時に自動で作られます（`ddl-auto=update`）。
 
 DB名・ユーザー名が異なる場合は、起動前に現在のPowerShellで設定します。
 
@@ -39,7 +48,7 @@ $env:BLACKJACK_DB_USER='既存のユーザー名'
 ```
 
 設定は `src/main/resources/application-local.properties`。
-パスワードは起動時にのみ渡し、ファイルに記録しません。テーブル自動作成は無効です。
+パスワードは起動時にのみ渡し、ファイルに記録しません。
 
 ## テスト
 

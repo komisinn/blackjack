@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G1 新規登録 -->
+<head th:replace="~{fragments/header :: head('新規登録')}"></head>
+<body>
+<main>
+    <div class="panel auth">
+        <div class="ttl">ブラックジャックゲーム</div>
+        <div class="sub">チップを賭けてAIと同じテーブルで勝負しよう</div>
+
+        <div class="authtabs">
+            <a th:href="@{/login}">ログイン</a>
+            <a class="on" th:href="@{/register}">新規登録</a>
+        </div>
+
+        <form th:action="@{/register}" method="post">
+            <!-- ① ユーザー名（エラーで戻ってきた時は入力済みの値を残す） -->
+            <div class="field">
+                <label for="userName">ユーザー名</label>
+                <input id="userName" name="userName" type="text" maxlength="50" placeholder="表示される名前"
+                       th:value="${userName}" required>
+            </div>
+            <!-- ② メールアドレス -->
+            <div class="field">
+                <label for="email">メールアドレス</label>
+                <input id="email" name="email" type="email" maxlength="255" placeholder="you@example.com"
+                       th:value="${email}" required>
+            </div>
+            <!-- ③ パスワード -->
+            <div class="field">
+                <label for="password">パスワード</label>
+                <input id="password" name="password" type="password" maxlength="64" placeholder="8文字以上" required>
+            </div>
+            <!-- ④ パスワード（確認） -->
+            <div class="field">
+                <label for="passwordConfirm">パスワード（確認）</label>
+                <input id="passwordConfirm" name="passwordConfirm" type="password" maxlength="64" placeholder="もう一度入力" required>
+            </div>
+            <!-- ⑤ エラーメッセージ（入力に誤りがある時だけ） -->
+            <div class="msg err" th:text="${error}"></div>
+            <!-- ⑥ 登録する -->
+            <button class="btn gold block" type="submit">登録する</button>
+        </form>
+
+        <!-- ⑦ ログインはこちら -->
+        <p class="center small" style="margin:10px 0 0"><a th:href="@{/login}">ログインはこちら</a></p>
+    </div>
+</main>
+</body>
+</html>

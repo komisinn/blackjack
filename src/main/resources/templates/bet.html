@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G5 ベット -->
+<head th:replace="~{fragments/header :: head('ベット')}"></head>
+<body>
+<header th:replace="~{fragments/header :: header('play')}"></header>
+<main>
+    <div class="stack">
+
+        <!-- テーブル（まだカードは配られていない） -->
+        <div>
+            <div class="dealer">
+                <span class="dealerlbl">Dealer</span><br>
+                <!-- ② 連勝表示（2連勝以上の時だけ） -->
+                <span class="streakbar" th:if="${streakMessage != null}" th:text="${streakMessage}">2連勝中　あと1勝でボーナス</span>
+            </div>
+            <div class="seats">
+                <div>
+                    <span class="namepill">AI1</span>
+                    <div class="seatchips"><span th:replace="~{fragments/header :: coin(${aiChips[0]})}"></span></div>
+                </div>
+                <div>
+                    <span class="namepill you">You</span>
+                    <!-- ① 所持チップ -->
+                    <div class="seatchips"><span th:replace="~{fragments/header :: coin(${user.chips})}"></span></div>
+                </div>
+                <div>
+                    <span class="namepill">AI2</span>
+                    <div class="seatchips"><span th:replace="~{fragments/header :: coin(${aiChips[1]})}"></span></div>
+                </div>
+                <div>
+                    <span class="namepill">AI3</span>
+                    <div class="seatchips"><span th:replace="~{fragments/header :: coin(${aiChips[2]})}"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>ベット</h2>
+            <p class="lead">チップをタップすると賭け金が加算されます。置いたチップをタップすると戻せます。</p>
+            <div class="msg err" th:if="${error}" th:text="${error}"></div>
+
+            <!-- ③ チップ（押すたびに賭け金に加算）。動きは bet.js が担当 -->
+            <div class="chips" id="chips">
+                <button type="button" class="chip c5" data-chip="5">5</button>
+                <button type="button" class="chip c10" data-chip="10">10</button>
+                <button type="button" class="chip c25" data-chip="25">25</button>
+                <button type="button" class="chip c50" data-chip="50">50</button>
+                <button type="button" class="chip c100" data-chip="100">100</button>
+                <button type="button" class="chip c250" data-chip="250">250</button>
+                <button type="button" class="chip c500" data-chip="500">500</button>
+            </div>
+
+            <div class="row" style="margin:12px 0">
+                <!-- ④ 積まれたチップ（押すと1枚戻る） -->
+                <div class="stacked" id="stacked"></div>
+                <!-- ⑤ 賭け金 -->
+                <div class="betamt">賭け金 <b class="num" id="betAmount">0</b></div>
+                <!-- ⑥ クリア／オールイン -->
+                <button type="button" class="btn white" id="clearBtn" style="padding:6px 14px">クリア</button>
+                <button type="button" class="btn white" id="allInBtn" style="padding:6px 14px">オールイン</button>
+            </div>
+
+            <!-- ⑦ ベットする：賭け金を hidden で送る。data-max は所持チップ（bet.js が読む） -->
+            <form class="row" id="betForm" th:action="@{/game/start}" method="post" th:data-max="${user.chips}">
+                <input type="hidden" name="bet" id="betInput" value="0">
+                <button class="btn gold" type="submit" id="dealBtn" disabled>ベットする</button>
+            </form>
+        </div>
+
+    </div>
+</main>
+<script th:src="@{/js/bet.js}"></script>
+</body>
+</html>

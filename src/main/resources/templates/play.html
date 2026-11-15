@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<!-- G6 ゲームプレイ
+     この画面の中身（カードや席）は game.js が Ajax でサーバーから状態をもらって描く。
+     ここには「描く場所」だけを用意しておく。 -->
+<head th:replace="~{fragments/header :: head('ゲームプレイ')}"></head>
+<!-- data-base：アプリのURLの先頭（game.js が Ajax のURLを作る時に使う） -->
+<body th:data-base="@{/}">
+<header th:replace="~{fragments/header :: header('play')}"></header>
+<main>
+    <div class="tablearea">
+        <!-- ⑨ 結果ログ -->
+        <div class="reslog" id="resLog"></div>
+
+        <!-- ① ディーラーの手札 -->
+        <div class="dealer">
+            <span class="dealerlbl">Dealer</span><br>
+            <div class="cardbox" id="dealerCards"></div>
+            <div class="tot" id="dealerLabel"></div>
+        </div>
+
+        <!-- ② AIプレイヤー ／ ③ 自分の手札 -->
+        <div class="seats" id="seats"></div>
+    </div>
+
+    <!-- ④ ベット額・所持チップ -->
+    <div class="betline num" id="betLine"></div>
+
+    <!-- ⑤〜⑧ 行動ボタン -->
+    <div class="acts">
+        <button class="act SURRENDER" data-action="SURRENDER" disabled>SURRENDER</button>
+        <button class="act STAND" data-action="STAND" disabled>STAND</button>
+        <button class="act HIT" data-action="HIT" disabled>HIT</button>
+        <button class="act DOUBLE" data-action="DOUBLE" disabled>DOUBLE</button>
+    </div>
+
+    <div class="footnote" id="footnote">AI1 は行動済み／AI2・AI3 はこの後に行動します</div>
+    <div class="msg err center" id="errorMsg"></div>
+</main>
+<script th:src="@{/js/game.js}"></script>
+</body>
+</html>
